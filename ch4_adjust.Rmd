@@ -1,0 +1,154 @@
+---
+title: "CH4 補充"
+author: "朱志泓"
+date: "2017年1月19日"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+### **資料型別與資料結構**
+
+#### **1. 資料型別**
+ # 資料的性質，主要分為：
+
+- 數值資料 (Numeric)
+
+    `10`, `3.14`, `sqrt(2)`, ...
+
+- 文字資料 (Character)
+
+    `"Male"`, `"Monday"`, `"East"`, ...
+
+- 時間資料
+
+- 邏輯資料 (Logical) 
+
+    `TRUE`和`FALSE`
+
+#### **2. 資料結構**
+ # 資料的結構，主要分為：
+
+- 向量 (Vector)
+
+    `c(19, 21, 20, 17)`, `c("Male", "Female")`, `1:5`, ...
+
+- 因素向量 (Factor)
+
+```{r}
+factor(c("Female", "Male", "Male", "Female", "Female"))
+```
+
+```{r}
+factor(c("Slow", "Fast", "Slow", "Moderate"), ordered = TRUE, levels = c("Slow", "Moderate", "Fast"))
+```
+
+- 矩陣 (Matrix)
+
+- 陣列 (Array)
+
+- 資料框 (Data frame)
+
+- 清單 (List)
+
+### **建立等差數列之向量 seq()**
+
+ # 建立首項為1，末項為99，公差為2之向量
+
+ # 引數by：公差
+
+```{r}
+seq(from = 1, to = 99, by = 2)
+```
+
+ # 建立首項為1，公差為2，項數為50之向量
+
+ # 引數length：項數
+
+```{r}
+seq(from = 1, by = 2, length = 50)
+```
+
+ # 建立首項為1，末項為99，項數為50之向量
+
+```{r}
+seq(from = 1, to = 99, length = 50)
+```
+
+### **運用邏輯值向量選取元素**
+```{r}
+my_vec <- c(1:5, 11:15, 21:25)
+my_vec
+```
+
+ # 尋找5的倍數之值
+
+```{r}
+my_vec[c(5, 10, 15)]
+```
+
+```{r}
+my_vec %% 5 == 0
+my_vec[my_vec %% 5 == 0]
+```
+
+ # 求5的倍數的個數
+```{r}
+length(my_vec[my_vec %% 5 == 0])
+```
+
+```{r}
+sum(my_vec %% 5 == 0)  # sum()：加總
+```
+
+### **因素向量(Factor)**
+
+ # 有兩種類型的因素向量，分別是**名目型(Nominal)**與**順序型(Ordinal)**
+
+#### **名目型(Nominal)**
+
+ # as.factor()：代表轉換成因素向量，只用factor()亦可
+
+ # 結果顯示Levels指相異值資訊
+
+```{r}
+char_vec <- c("Female", "Male", "Male", "Female", "Female")
+gen_factor <- factor(char_vec)
+gen_factor
+```
+
+ # 名目型的因素向量是沒有排序之分
+
+```{r warning = FALSE}
+gen_factor[1] > gen_factor[2]
+```
+
+#### **順序型(Ordinal)**
+
+ # 引數ordered：levels的輸入是否有順序，預設為FALSE
+
+ # 引數levels：指定順序 (由小到大)
+
+```{r}
+speed_vector <- c("Slow", "Fast", "Slow", "Moderate")
+speed_factor <- factor(speed_vector, ordered = TRUE, levels = c("Slow", "Moderate", "Fast"))
+speed_factor
+```
+
+ # 順序型有了排序
+
+```{r}
+speed_factor[1] > speed_factor[2]
+```
+
+ # 數值資料會自動排序?
+
+```{r warning = FALSE}
+num_vec <- c(1, 2, 4, 3, 1, 2, 3, 4, 1)
+num_factor <- factor(num_vec)
+num_factor
+num_factor[1] > num_factor[2]
+```
+
+ # 不會，屬於名目型因素向量
