@@ -15,9 +15,9 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-### **資料型別與資料結構** a
+### **資料型別 (Data type)與資料結構 (Data Structure)**
 
-#### **1. 資料型別** a
+#### **1. 資料型別 (Data type)**
 
  # 資料的性質，主要分為：
 
@@ -35,7 +35,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
     `TRUE`和`FALSE`
 
-#### **2. 資料結構**
+#### **2. 資料結構 (Data Structure)**
 
  # 資料的結構，主要分為：
 
@@ -85,7 +85,7 @@ seq(from = 1, by = 2, length = 50)
 seq(from = 1, to = 99, length = 50)
 ```
 
-### **運用邏輯值向量選取元素**
+### **運用邏輯值 (logical)向量選取元素**
 
 ```{r}
 my_vec <- c(1:5, 11:15, 21:25)
