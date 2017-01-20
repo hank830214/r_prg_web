@@ -1,7 +1,7 @@
 ---
-title: "CH4 補充"
+title: "CH4 講解補充"
 author: "朱志泓"
-date: "2017年1月19日"
+date: "2017年1月20日"
 output:
   html_document:
     toc: true
