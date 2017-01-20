@@ -3,7 +3,7 @@
 
 ### **教學檔案暫存區**
 
-- Ch4 講解補充
+- [Ch4 講解補充](https://hank830214.github.io/r_prg_web/ch4_adjust)
 
 ### **課程內容**
 
