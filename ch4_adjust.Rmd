@@ -112,11 +112,11 @@ length(my_vec[my_vec %% 5 == 0])
 sum(my_vec %% 5 == 0)  # sum()：加總
 ```
 
-### **因素向量(Factor)**
+### **因素向量 (Factor)**
 
  # 有兩種類型的因素向量，分別是**名目型(Nominal)**與**順序型(Ordinal)**
 
-#### **名目型(Nominal)**
+#### **名目型 (Nominal)**
 
  # as.factor()：代表轉換成因素向量，只用factor()亦可
 
@@ -134,7 +134,7 @@ gen_factor
 gen_factor[1] > gen_factor[2]
 ```
 
-#### **順序型(Ordinal)**
+#### **順序型 (Ordinal)**
 
  # 引數ordered：levels的輸入是否有順序，預設為FALSE
 
