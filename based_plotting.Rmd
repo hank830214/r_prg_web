@@ -1,0 +1,350 @@
+---
+title: "基本繪圖 (Base Plotting System)"
+author: "朱志泓"
+date: "2017年2月17日"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# **0. 玩具資料(Toy datasets)**
+
+R語言內建即設有許多測試用的資料，常用以測試工具對資料之可用性，而這些內建資料稱為**玩具資料**。
+
+## **0.1. 顯示內建資料集**
+
+使用函數`data()`，可用以呼叫內建資料集(*紅色線條*部分之視窗)，*綠色範圍*為資料名稱，*藍色範圍*為資料內容概述。
+
+`r ''````
+data()
+```
+
+![](based_plotting_1.png)
+
+## **0.2. 觀察玩具資料(以iris為例)**
+
+ # 查詢資料說明
+
+`r ''````
+?iris
+```
+
+![](based_plotting_2.png)
+
+ # 檢視資料內容
+
+`r ''````
+View(iris)
+```
+
+![](based_plotting_3.png)
+
+ # 檢視資料結構
+
+```{r}
+str(iris)
+```
+
+ # 查詢資料敘述性統計
+
+```{r}
+summary(iris)
+```
+
+---
+
+# **1. 散佈圖(Scatter)**
+
+玩具資料採用`cars`，觀察車速(speed)與煞車距離(dist)之關係。
+
+ # 觀察前幾筆資料
+
+```{r}
+head(cars)
+```
+
+## **1.1. 畫散佈圖**
+
+使用`plot`函數。
+
+ # main：圖片命名
+
+ # xlab：x軸標籤，預設為原資料欄位名稱
+
+ # ylab：y軸標籤，預設為原資料欄位名稱
+
+```{r}
+plot(cars$speed, cars$dist, main = "Car speed vs. braking distance", xlab = "Speed", ylab = "Dist")
+```
+
+---
+
+# **2. 線圖(Line Graph)**
+
+玩具資料採用`diamonds`，觀察鑽石長度(x)與闊度(y)之關係。
+
+ # 玩具資料`diamonds`儲存在套件`ggplot2`套件中，因此需先安裝並載入套件。
+
+```{r message = FALSE}
+library(ggplot2)
+```
+
+ # 觀察前幾筆資料
+
+```{r}
+head(diamonds)
+```
+
+為了簡化圖形之複雜度，採用玩具資料之前15筆作為畫圖數據。
+
+```{r}
+my_diamonds <- head(diamonds, n = 15L)
+```
+
+## **2.1. 畫線圖**
+
+線圖(Line Graph)亦是使用`plot`函數，將其中參數type更改為"l"(lines)。
+
+ # type：圖形種類，預設為"p"(points)
+
+```{r}
+plot(my_diamonds$x, my_diamonds$y, type = "l", main = "長度 vs. 闊度", xlab = "長度", ylab = "闊度")
+```
+
+圖形看起來不太對勁，原來畫線順序是即為資料排序，因此需讓資料做重排的動作，依x軸資料之大小排序。
+
+```{r message = FALSE}
+library(dplyr)
+my_diamonds <- arrange(my_diamonds, x)
+```
+
+再畫一次。
+
+```{r}
+plot(my_diamonds$x, my_diamonds$y, type = "l", main = "長度 vs. 闊度", xlab = "長度", ylab = "闊度")
+```
+
+## **2.2. 其他引數**
+
+### **2.2.1. 修改圖案(type)**
+
+如前所述，參數type預設為"p"(point)(分布圖)，也可設為"l"(line)(線圖)。
+
+此外，亦可設為"b"(both)，代表同時包含點和線。
+
+```{r}
+plot(my_diamonds$x, my_diamonds$y, type = "b", main = "長度 vs. 闊度", xlab = "長度", ylab = "闊度")
+```
+
+### **2.2.2. 修改顏色(col)**
+
+```{r}
+plot(my_diamonds$x, my_diamonds$y, type = "b", main = "長度 vs. 闊度", xlab = "長度", ylab = "闊度", col = "red")
+```
+
+在plot函數下似乎無法分別修改點和線的顏色，在下一個單元**進階繪圖**將可使用套件`ggplot2`來完成。
+
+### **2.2.3. 修改線的寬度(lwd)**
+
+```{r}
+plot(my_diamonds$x, my_diamonds$y, type = "b", main = "長度 vs. 闊度", xlab = "長度", ylab = "闊度", lwd = 3)
+```
+
+### **2.2.4. 修改點與線的樣式(pch與lty)**
+
+ # pch = 4：選擇叉叉
+ # lty = 2：選擇虛線
+
+```{r}
+plot(my_diamonds$x, my_diamonds$y, type = "b", main = "長度 vs. 闊度", xlab = "長度", ylab = "闊度", lwd = 3, pch = 4, lty = 2)
+```
+
+點與線的樣式選擇可從Help中搜尋。(`?plot`和`?par`)
+
+---
+
+# **3. 直方圖(Histogram)**
+
+玩具資料採用`cars`，觀察車速(speed)之分布。
+
+## **3.1. 畫直方圖**
+
+使用`hist`函數
+
+```{r}
+hist(cars$speed, main = "Distribution of speed variable", xlab = "Speed")
+```
+
+## **3.2. 其他引數**
+
+### **3.2.1 分箱(breaks)**
+
+可用以控制直方寬度(直方數)。
+
+```{r}
+hist(cars$speed, main = "Distribution of speed variable", xlab = "Speed", breaks = 8)
+```
+
+然而`hist`函數對於此`break`引數的功能似乎沒有設立很完善。
+
+```{r}
+hist(cars$speed, main = "Distribution of speed variable", xlab = "Speed", breaks = 12)
+```
+
+與設立`breaks = 8`相同。
+
+```{r}
+hist(cars$speed, main = "Distribution of speed variable", xlab = "Speed", breaks = 16)
+```
+
+## **3.3. 網格畫布**
+
+若想一次呈現多圖，可事先規劃規格及排列方式。
+
+ # 建立一個 1x2 且依照列排列的網格畫布(1列2欄)
+
+```{r}
+par(mfrow = c(1, 2))
+hist(cars$speed, main = "Distribution of speed variable", xlab = "Speed")
+hist(cars$dist, main = "Distribution of dist variable", xlab = "Dist")
+```
+
+ # 建立一個 2x1 且依照行排列的網格畫布(2列1欄)
+
+ # runif(n)：產生n個均勻分配之函數，預設範圍為0~1
+
+ # rnorm(n)：產生n個常態分配之函數，預設mean = 0、sd = 1
+
+```{r}
+par(mfcol = c(2, 1))
+n <- 100
+hist(runif(n), main = paste("Distribution of", n, "uniformly distributed variables")) # 試著增加隨機數的個數 n
+hist(rnorm(n), main = paste("Distribution of", n, "normally distributed variables")) # 試著增加隨機數的個數 n
+```
+
+`paste`函數可用於印出變數所代表的值，區分字串和變數名稱。並且以空格作為區隔。
+
+---
+
+# **4. 盒鬚圖(Boxplot)**
+
+玩具資料採用`iris`，分別觀察不同品種(Species)的花瓣(Petal)與萼片(Sepal)之長度(Length)與寬度(Width)之分布。
+
+## **4.1. 畫盒鬚圖**
+
+使用`boxplot`函數，直接畫萼片之長度分佈。
+
+```{r}
+boxplot(iris$Sepal.Length, main = "Sepal length by species")
+```
+
+使用`~`指定分別按品種(Species)畫盒鬚圖。
+
+```{r}
+boxplot(iris$Sepal.Length ~ iris$Species, main = "Sepal length by species")
+```
+
+依照不同品種(Species)的花瓣(Petal)與萼片(Sepal)之長度(Length)與寬度(Width)之分布。
+
+ # 按照*列*方向排序
+
+```{r}
+par(mfrow = c(2, 2))
+boxplot(iris$Sepal.Length ~ iris$Species, main = "Sepal length by species")
+boxplot(iris$Sepal.Width ~ iris$Species, main = "Sepal width by species")
+boxplot(iris$Petal.Length ~ iris$Species, main = "Petal length by species")
+boxplot(iris$Petal.Width ~ iris$Species, main = "Petal width by species")
+```
+
+ # 按照*行*方向排序
+
+```{r}
+par(mfcol = c(2, 2))
+boxplot(iris$Sepal.Length ~ iris$Species, main = "Sepal length by species")
+boxplot(iris$Sepal.Width ~ iris$Species, main = "Sepal width by species")
+boxplot(iris$Petal.Length ~ iris$Species, main = "Petal length by species")
+boxplot(iris$Petal.Width ~ iris$Species, main = "Petal width by species")
+```
+
+---
+
+# **5. 長條圖(Bar chart)**
+
+長條圖常用於計數(count)，類別不多時。而直方圖用於觀察分布。
+
+玩具資料採用`mtcars`，為不同齒輪(gear)之車輛數作計數，以及列出每種車型的馬力(hp)。
+
+## **5.1. 畫長條圖**
+
+使用`barplot`函數
+
+### **5.1.1. 計數**
+
+未計數的悲劇
+
+```{r}
+barplot(1:10)
+```
+
+計數
+```{r}
+table(mtcars$gear)
+```
+
+### **5.1.2. 畫圖**
+
+依照齒輪(gear)計數
+
+```{r}
+barplot(table(mtcars$gear), main = "Vehicle counts by gear types", xlab = "Gear", ylab = "Vehicle counts")
+```
+
+## **5.2. 呈現長度**
+
+列出每種車型的馬力(hp)
+
+```{r}
+vehicle_names <- row.names(mtcars)
+```
+
+若不指定名稱，僅按列的排序列出長條圖。
+
+```{r}
+barplot(mtcars$hp, main = "Horse power for each vehicles")
+```
+
+ # names.arg：附上種類名稱
+
+```{r}
+barplot(mtcars$hp, names.arg = vehicle_names, main = "Horse power for each vehicles")
+```
+
+然而發現橫軸無法容納所有車型名稱，故將長條圖調整成水平。
+
+ # horiz：水平與否，預設為FALSE(垂直)，更改為TRUE(水平)
+
+```{r}
+barplot(mtcars$hp, names.arg = vehicle_names, main = "Horse power for each vehicles", horiz = TRUE)
+```
+
+修改文字方向
+
+ #las：預設為0(標籤文字與軸為平行)，調成1(固定為橫向)
+
+```{r}
+barplot(mtcars$hp, names.arg = vehicle_names, horiz = TRUE, las = 1)
+```
+
+ #cex.name：調整名稱文字大小
+
+```{r}
+barplot(mtcars$hp, names.arg = vehicle_names, horiz = TRUE, las = 1, cex.name = 0.4)
+```
+
+ #cex.axis：調整數值文字大小
+
+```{r}
+barplot(mtcars$hp, names.arg = vehicle_names, horiz = TRUE, las = 1, cex.name = 0.4, cex.axis = 0.8)
+```
