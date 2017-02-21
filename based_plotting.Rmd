@@ -331,19 +331,19 @@ barplot(mtcars$hp, names.arg = vehicle_names, main = "Horse power for each vehic
 
 修改文字方向
 
- #las：預設為0(標籤文字與軸為平行)，調成1(固定為橫向)
+ # las：預設為0(標籤文字與軸為平行)，調成1(固定為橫向)
 
 ```{r}
 barplot(mtcars$hp, names.arg = vehicle_names, horiz = TRUE, las = 1)
 ```
 
- #cex.name：調整名稱文字大小
+ # cex.name：調整名稱文字大小
 
 ```{r}
 barplot(mtcars$hp, names.arg = vehicle_names, horiz = TRUE, las = 1, cex.name = 0.4)
 ```
 
- #cex.axis：調整數值文字大小
+ # cex.axis：調整數值文字大小
 
 ```{r}
 barplot(mtcars$hp, names.arg = vehicle_names, horiz = TRUE, las = 1, cex.name = 0.4, cex.axis = 0.8)
