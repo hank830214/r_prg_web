@@ -9,7 +9,7 @@
 
 - 基本繪圖
 
-    - [based_plotting](https://hank830214.github.io/r_prg_web/based_plotting)
+    - [Base Plotting System](https://hank830214.github.io/r_prg_web/based_plotting)
 
     - [ggplot2](https://hank830214.github.io/r_prg_web/ggplot2)
 
