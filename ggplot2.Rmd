@@ -1,0 +1,346 @@
+---
+title: "基本繪圖 (ggplot2)"
+author: "朱志泓"
+date: "2017年2月21日"
+output:
+  html_document:
+    theme: united
+    highlight: haddock
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+本章節將使用套件`ggplot2`，同[前一節](https://hank830214.github.io/r_prg_web/based_plotting)，繪出散佈圖、線圖、直方圖、盒鬚圖和長條圖。
+
+# **0. 安裝及載入套件`ggplot2`**
+
+ # 安裝套件
+
+```
+install.packages("ggplot2")
+```
+
+ # 載入套件
+
+```{r}
+library(ggplot2)
+```
+
+載入套件後，將發現將新增更多玩具資料，可於`data()`查詢。
+
+接下來將一致使用`ggplot`函數繪圖。
+
+---
+
+# **1. 散佈圖(Scatter)**
+
+玩具資料採用`cars`，觀察車速(speed)與煞車距離(dist)之關係。
+
+## **1.1. 畫散佈圖**
+
+ # aes：輸入x軸與y軸資料
+
+```{r}
+ggplot(cars, aes(x = speed, y = dist))
+```
+
+發現點不會自動顯示出來，使用"+"來進行函數疊加。
+
+ # geom_point()：畫點
+
+```{r}
+ggplot(cars, aes(x = speed, y = dist)) +
+  geom_point()
+```
+
+亦可以先將畫布指派到變數
+
+```{r}
+ggplot_without_points <- ggplot(cars, aes(x = speed, y = dist))
+ggplot_without_points +
+　geom_point()
+```
+
+加入圖片標題(類似`main`)與座標名稱
+
+ # ggtitle：圖片標題
+
+ # xlab()：給x座標名稱
+
+ # ylab()：給y座標名稱
+
+```{r}
+ggplot(cars, aes(x = speed, y = dist)) +
+  geom_point() +
+  ggtitle("Car speed vs. braking distance") +
+  xlab("Speed") + 
+  ylab("Dist")
+```
+
+## **1.2. 其他功能**
+
+### **1.2.1 加入回歸線**
+
+ # geom_smooth(method = ...)：加入最適線，"lm"代表回歸方法用linear modol
+
+```{r}
+ggplot(cars, aes(x = speed, y = dist)) +
+  geom_point() +
+  ggtitle("Car speed vs. braking distance") +
+  xlab("Speed") + 
+  ylab("Dist") +
+  geom_smooth(method = "lm")
+```
+
+可至`?geom_smooth`查詢其他回歸方法
+
+　# se：是否顯示confidence interval，預設為TRUE
+
+```{r}
+ggplot(cars, aes(x = speed, y = dist)) +
+  geom_point() +
+  ggtitle("Car speed vs. braking distance") +
+  xlab("Speed") + 
+  ylab("Dist") +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+### **1.2.2 顏色調整**
+
+玩具資料採用`iris`，依照不同品種(Species)來觀察萼片(Sepal)之長度(Length)與寬度(Width)之分布。
+
+`aes()`中加入引數`color`
+
+尚未依照品種區分之散佈圖
+
+```{r}
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width)) +
+  geom_point() +
+  ggtitle("Sepal.Length vs. Sepal.Width") +
+  xlab("Sepal length") +
+  ylab("Sepal width")
+```
+
+依品種(Species)按顏色區分
+
+```{r}
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+  geom_point() +
+  ggtitle("Sepal.Length vs. Sepal.Width") +
+  xlab("Sepal length") +
+  ylab("Sepal width")
+```
+
+---
+
+# **2. 線圖(Line Graph)**
+
+玩具資料採用`diamonds`，觀察鑽石長度(x)與闊度(y)之關係。
+
+```{r}
+my_diamonds <- head(diamonds, n = 15L)
+```
+
+## **2.1. 畫線圖**
+
+  # geom_line()：畫線
+
+```{r}
+ggplot(my_diamonds, aes(x = x, y = y)) + 
+  geom_line()
+```
+
+發現geom_line的畫線順序自動會以x軸資料之大小排序
+
+```{r}
+ggplot(my_diamonds, aes(x = x, y = y)) + 
+　geom_point() +
+  geom_line()
+```
+
+## **2.2. 其他功能**
+
+### **2.2.1 上色**
+
+ # colour：調整顏色
+
+```{r}
+ggplot(my_diamonds, aes(x = x, y = y)) + 
+  geom_point(colour = "green") +
+  geom_line(colour = "red")
+```
+
+線圖常用來視覺化時間序列
+
+```{r}
+head(economics)
+ggplot(economics, aes(x = date, y = unemploy)) + 
+  geom_line()
+```
+
+---
+
+# **3. 直方圖(Histogram)**
+
+## **3.1. 畫直方圖**
+
+玩具資料採用`iris`，觀察萼片(Sepal)之長度(Length)之分布。
+
+使用`ggplot() + geom_histogram()`繪製直方圖
+
+ # binwidth：調整分箱寬度
+
+```{r}
+ggplot(iris, aes(x = Sepal.Length)) +
+  geom_histogram(binwidth = 0.2)
+```
+
+## **3.2. 其他功能**
+
+### **3.2.1. 分類畫圖**
+
+ # facet_wrap()：納入類別變數分別畫圖
+
+```{r}
+ggplot(iris, aes(x = Sepal.Length)) +
+  geom_histogram(binwidth = 0.2) +
+  facet_wrap(~ Species)
+```
+
+加入`ncol`引數，可調整畫布規格。
+
+```{r}
+ggplot(iris, aes(x = Sepal.Length)) +
+  geom_histogram(binwidth = 0.2) +
+  facet_wrap(~ Species, ncol = 1)
+```
+
+---
+
+# **4. 盒鬚圖(Boxplot)**
+
+玩具資料採用`iris`，分別觀察不同品種(Species)的萼片(Sepal)之長度(Length)之分布。
+
+## **4.1. 畫盒鬚圖**
+
+使用`ggplot() + geom_boxplot()`繪製盒鬚圖
+
+ # 預設要讓aes吃一個x值
+
+```{r}
+ggplot(iris, aes(x = 1, y = Sepal.Length)) +
+  geom_boxplot()
+```
+
+## **4.2. 其他功能**
+
+### **4.2.1. 分類畫圖**
+
+ # aes() 指定 x = 納入類別變數的展開
+
+```{r}
+ggplot(iris, aes(x = Species, y = Sepal.Length)) +
+  geom_boxplot()
+```
+
+---
+
+# **5. 長條圖(Bar chart)**
+
+玩具資料採用`mtcars`，為不同齒輪(gear)之車輛數作計數，以及列出每種車型的馬力(hp)。
+
+## **5.1. 畫長條圖**
+
+使用`ggplot() + geom_bar()`繪製長條圖
+
+```{r}
+ggplot(mtcars, aes(x = gear)) + 
+  geom_bar()
+```
+
+## **5.2. 其他功能**
+
+### **5.2.1. 顯示數值
+
+```
+ggplot(mtcars, aes(x = row.names(mtcars), y = hp)) +
+  geom_bar()
+```
+
+發現上述指令會出現error訊息，原因是預設y值為`"count"`，作**計數**的動作。然而在此想呈現馬力(hp)數值高低，因此得調整函數`geom_bar`中的引數`stat`。
+
+ # geom_bar(stat = "identity")：呈現數值
+
+```{r}
+ggplot(mtcars, aes(x = row.names(mtcars), y = hp)) +
+  geom_bar(stat = "identity")
+```
+
+### **5.2.2. 座標翻轉**
+
+ # cood_flip()：座標翻轉
+
+```{r}
+ggplot(mtcars, aes(x = row.names(mtcars), y = hp)) +
+  geom_bar(stat = "identity") + coord_flip()
+```
+
+### **5.2.3. 類別著色**
+
+玩具資料採用`mpg`，觀察各車型(class)的數量，並區分車輪驅動方式(drv)。
+
+ # geom_bar(aes(fill = (drv)))：依照類別drv為長條圖著色 
+
+```{r}
+ggplot(mpg, aes(x = class)) +
+  geom_bar(aes(fill = drv))
+```
+
+可選擇依類別將長條分開
+
+ # 加入 position = "dodge" 參數
+
+```{r}
+ggplot(mpg, aes(x = class)) +
+  geom_bar(aes(fill = drv), position = "dodge")
+```
+
+亦可觀察各車型(class)，各車輪驅動方式(drv)之百分比。
+
+ # 加入 position = "fill" 參數
+
+```{r}
+ggplot(mpg, aes(x = class)) +
+  geom_bar(aes(fill = drv), position = "fill") +
+  ylab("Percentage")
+```
+
+---
+
+# **6. 圖形互動(`ggplotly`)**
+
+## **6.1. 安裝及載入套件`plotly`**
+
+ # 安裝套件
+
+```
+install.packages("plotly")
+```
+
+ # 載入套件
+
+```{r message = FALSE}
+library(plotly)
+```
+
+## **6.2. 加入互動性**
+
+ # ggplotly()：新增互動功能
+
+```{r}
+static_gg <- ggplot(mpg, aes(x = class)) +
+  geom_bar(aes(fill = drv))
+ggplotly(static_gg)
+```
