@@ -80,7 +80,7 @@ head(cars)
  # ylab：y軸標籤，預設為原資料欄位名稱
 
 ```{r}
-plot(cars$speed, cars$dist, main = "Car speed vs. braking distance", xlab = "Speed", ylab = "Dist")
+plot(cars$speed, cars$dist, main = "Car speed vs. breaking distance", xlab = "Speed", ylab = "Dist")
 ```
 
 ---
@@ -289,7 +289,7 @@ boxplot(iris$Petal.Width ~ iris$Species, main = "Petal width by species")
 未計數的悲劇
 
 ```{r}
-barplot(1:10)
+barplot(mtcars$gear)
 ```
 
 計數
