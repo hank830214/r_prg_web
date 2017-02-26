@@ -6,6 +6,7 @@
 - [Ch4 講解補充](https://hank830214.github.io/r_prg_web/ch4_adjust)
 
 ### **課程內容**
+- [基本操作](https://hank830214.github.io/r_prg_web/basic)
 
 - 基本繪圖
 
