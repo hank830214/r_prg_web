@@ -182,7 +182,7 @@ ggplot(economics, aes(x = date, y = unemploy)) +
 
 ---
 
-# **3. 直方圖(Histogram)**
+# **3. 直方圖(Histogram)與機率密度圖**
 
 ## **3.1. 畫直方圖**
 
@@ -199,9 +199,9 @@ ggplot(iris, aes(x = Sepal.Length)) +
 
 ## **3.2. 其他功能**
 
-### **3.2.1. 分類畫圖**
+### **3.2.1. 分類畫圖(不限於直方圖)**
 
- # facet_wrap()：納入類別變數分別畫圖
+ # facet_wrap()：納入單一類別變數分層畫圖
 
 ```{r}
 ggplot(iris, aes(x = Sepal.Length)) +
@@ -217,9 +217,28 @@ ggplot(iris, aes(x = Sepal.Length)) +
   facet_wrap(~ Species, ncol = 1)
 ```
 
+ # facet_grid()：納入兩個類別變數分層畫圖
+
+```{r}
+ggplot(diamonds, aes(x = carat, y = price)) + 
+  geom_point(aes(color = color)) +
+  facet_grid(cut ~ clarity)
+```
+
+## **3.3. 機率密度圖**
+
+機率密度圖可想像成將寬度縮成很細的直方圖。
+
+ # fill：所要填滿之顏色
+
+```{r}
+ggplot(diamonds) + 
+  geom_density(aes(x = carat), fill = "grey50")
+```
+
 ---
 
-# **4. 盒鬚圖(Boxplot)**
+# **4. 盒鬚圖(Boxplot)與小提琴圖**
 
 玩具資料採用`iris`，分別觀察不同品種(Species)的萼片(Sepal)之長度(Length)之分布。
 
@@ -243,6 +262,22 @@ ggplot(iris, aes(x = 1, y = Sepal.Length)) +
 ```{r}
 ggplot(iris, aes(x = Species, y = Sepal.Length)) +
   geom_boxplot()
+```
+
+## **4.3. 小提琴圖**
+
+小提琴圖可想像成箱子按曲線呈現的箱型圖。
+
+```{r}
+ggplot(diamonds, aes(x = 1, y = carat)) +
+  geom_violin()
+```
+
+按cut分類
+
+```{r}
+ggplot(diamonds, aes(x = cut, y = carat)) +
+  geom_violin()
 ```
 
 ---
@@ -343,4 +378,120 @@ library(plotly)
 static_gg <- ggplot(mpg, aes(x = class)) +
   geom_bar(aes(fill = drv))
 ggplotly(static_gg)
+```
+
+---
+
+# **7. 其他補充**
+
+## **7.1. 格式調整**
+
+### **7.1.1. 安裝與載入套件**
+
+ # 安裝套件`lubridate`
+
+```
+install.packages("lubridate")
+```
+
+ # 載入套件`lubridate`和`scales`
+
+```{r message = FALSE}
+require(lubridate)
+require(scales)
+```
+
+### **7.1.2. 資料調整**
+
+僅採用economics資料中2000年後的資料
+
+ # label：TRUE代表月份按名稱顯示而非數字
+
+```{r}
+economics$year <- year(economics$date)
+economics$month <- month(economics$date, label = TRUE)
+econ2000 <- economics[which(economics$year >= 2000), ]
+# econ2000 <- economics[economics$year >= 2000, ] 亦可
+```
+
+依不同顏色標記不同年份，並按年份將劃分不同的線
+
+```{r}
+ggplot(econ2000, aes(x = month, y = pop)) +
+  geom_line(aes(color = factor(year), group = year))
+```
+
+### **7.1.2. 格式調整**
+
+ # 修改說明文字
+ 
+ # 用comma修改y軸格式
+ 
+ # 新增標題和x軸, y軸的標籤
+
+```{r}
+ggplot(econ2000, aes(x = month, y = pop)) +
+  geom_line(aes(color = factor(year), group = year)) +
+  scale_color_discrete(name = "Year") +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Population Growth", x = "Month", y = "Population")
+```
+
+## **7.2. 主題樣式**
+
+### **7.1.1. 安裝與載入套件`ggthemes`**
+
+ # 安裝套件
+
+```
+install.packages("ggthemes")
+```
+
+ # 載入套件
+
+```{r message = FALSE}
+require(ggthemes)
+```
+
+### **7.1.2. 使用不同主題**
+
+ # 原本樣式
+
+```{r}
+ggplot(diamonds, aes(x = carat, y = price)) +
+  geom_point(aes(color = color))
+```
+
+ # The Economist
+
+```{r}
+ggplot(diamonds, aes(x = carat, y = price)) +
+  geom_point(aes(color = color)) +
+  theme_economist() +
+  scale_colour_economist()
+```
+
+ # Excel
+
+```{r}
+ggplot(diamonds, aes(x = carat, y = price)) +
+  geom_point(aes(color = color)) +
+  theme_excel() +
+  scale_colour_excel()
+```
+
+ # Edward Tufte
+
+```{r}
+ggplot(diamonds, aes(x = carat, y = price)) +
+  geom_point(aes(color = color)) +
+  theme_tufte()
+```
+
+ # The Wall Street Journal
+
+```{r}
+ggplot(diamonds, aes(x = carat, y = price)) +
+  geom_point(aes(color = color)) +
+  theme_wsj()
 ```
