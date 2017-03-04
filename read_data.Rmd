@@ -1,0 +1,217 @@
+---
+title: "讀取各類資料"
+author: "朱志泓"
+date: "2017年3月4日"
+output:
+  html_document:
+    theme: united
+    highlight: haddock
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+本章節將介紹讀取常用之不同外部資料格式（如csv、txt、html等）的方法，基本上先建議R語言可讀取不同類型之外部資料的概念，待實際操作上使用，再查詢方法即可。
+
+---
+
+# **1. 讀取CSV**
+
+通常使用`read.table`函數，而不建議使用`read.csv`函數。
+
+`read.table`函數的輸出會以**資料框(data.frame)**呈現。
+
+## **1.1. 儲存檔案位置**
+
+```{r}
+theUrl <- "http://www.jaredlander.com/data/Tomato%20First.csv"
+```
+
+## **1.2. 讀取CSV**
+
+ # file：檔案的完整路徑
+
+ # header：是否將資料的第一橫列為直行名稱
+
+ # sep：設定分隔資料格式的分隔符號。 `,` (逗點分隔)　`\t` (tab 分隔)　`;` (分號分隔)
+
+CSV屬於**逗點**分隔值檔案。
+
+```{r}
+tomato <- read.table (file = theUrl, header = TRUE, sep = ",")
+head(tomato,5)
+```
+
+若使用錯誤分隔符號，則會出現讀取資料格式錯誤的情形。
+
+```{r}
+tomato <- read.table (file = theUrl, header = TRUE, sep = "\t")
+head(tomato,5)
+```
+
+```{r}
+tomato <- read.table (file = theUrl, header = TRUE, sep = ";")
+head(tomato,5)
+```
+
+瞧瞧`tomato`的資料結構
+
+```{r}
+tomato <- read.table (file = theUrl, header = TRUE, sep = ",")
+str(tomato)
+```
+
+發現文字直行被自動轉成因素向量(Factor)，可使用引數`stringAsFactors`去阻止轉換。
+
+```{r}
+tomato <- read.table (file = theUrl, header = TRUE, sep = ",", stringsAsFactors = FALSE)
+str(tomato)
+```
+
+引數`stringAsFactors`亦可用於`data.frame`上
+
+```{r}
+x <- 1:5
+y <- -4:0
+q <- c("Hockey", "Football", "Baseball", "Curling", "Rugby")
+theDF <- data.frame(First = x, Second = y, Sport = q, stringsAsFactors = FALSE)
+str(theDF)
+```
+
+亦可使用引數`quote`和`colClasses`，各為指定儲存格所要用的字元和每個直行的資料型別。
+
+---
+
+# **2. 讀取EXCEL試算表**
+
+載入EXCEL試算表資料可有兩種方法，一種是直接轉成CSV檔，如前一節方式讀取；另一種是使用`readxl`套件中的`read_excel`函數
+
+ # 安裝及載入`readxl`的套件
+
+```
+install.packages(readxl)
+```
+
+```{r message = FALSE}
+library(readxl)
+```
+
+ # 必須先將 https://storage.googleapis.com/r_rookies/iris.xlsx 下載到目錄下，然後嘗試用`read_excel`函數讀取。（由於不方便於網站操作，請自行練習。）
+
+```
+titanic_xlsx <- read_excel("iris.xlsx")
+```
+
+---
+
+# **3. 讀取txt**
+
+一樣可以使用`read_table`函數，注意原始檔案之分隔符號。
+
+## **3.1. 儲存檔案位置**
+
+```{r}
+url <- "https://storage.googleapis.com/r_rookies/iris.txt"
+```
+
+## **3.2. 讀取txt**
+
+```{r}
+iris_colon_sep_df <- read.table(url, sep = ":", header = TRUE)
+head(iris_colon_sep_df)
+```
+
+---
+
+# **4. 讀取其他統計軟體的資料**
+
+以下為一部分可讀取一些常用統計軟體的資料之函數列表：
+
+|函數|資料格式|
+|----|--------|
+|read.spss|SPSS|
+|read.dta|Stata|
+|read.ssd|SAS|
+|read.octave|Octave|
+|read.mtp|Minitab|
+|read.systat|Systa|
+
+---
+
+# **5. RData檔**
+
+RData檔與R檔不同，適用於儲存工作環境的變數或資料。
+
+RData檔可同時用於Windows、Mac和Linux。
+
+## **5.1. 儲存單一資料**
+
+ # 儲存工作環境下的資料(`save`函數)
+
+```{r}
+my_diamonds <- head(diamonds, n = 15L)
+save(my_diamonds, file = "my_diamonds.rdata")
+```
+
+ # 移除資料
+
+```{r}
+rm(my_diamonds)
+my_diamonds
+```
+
+ # 重新讀取資料(`load`函數)
+
+```{r}
+load("my_diamonds.rdata")
+my_diamonds
+```
+
+## **5.2. 儲存多個物件**
+
+作法同上。
+
+```{r}
+n <- 20
+r <- 1:10
+w <- data.frame(n,r)
+save(n, r, w, file = "multiple.rdata")
+rm(n, r, w)
+load("multiple.rdata")
+n
+r
+w
+```
+
+---
+
+# **6. 讀取簡易HTML表格**
+
+# 安裝及載入`XML`的套件
+
+```
+install.packages(XML)
+```
+
+```{r message = FALSE}
+require(XML)
+```
+
+## **6.1. 儲存網頁位置**
+
+```{r}
+theURL <- "http://www.jaredlander.com/2012/02/another-kind-of-super-bowl-pool/"
+```
+
+## **6.2. 讀取簡易HTML表格**
+
+ # which：讀取第n個表格
+
+ # header：列表有無表頭
+
+ # stringsAsFactors：預防character直行被轉成factor
+
+```{r}
+bowlPool <- readHTMLTable(theURL, which = 1, header = FALSE, stringsAsFactors = FALSE)
+```
