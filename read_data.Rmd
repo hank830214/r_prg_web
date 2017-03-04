@@ -150,6 +150,7 @@ RData檔可同時用於Windows、Mac和Linux。
  # 儲存工作環境下的資料(`save`函數)
 
 ```{r}
+library(ggplot2)
 my_diamonds <- head(diamonds, n = 15L)
 save(my_diamonds, file = "my_diamonds.rdata")
 ```
@@ -158,7 +159,6 @@ save(my_diamonds, file = "my_diamonds.rdata")
 
 ```{r}
 rm(my_diamonds)
-my_diamonds
 ```
 
  # 重新讀取資料(`load`函數)
@@ -214,4 +214,5 @@ theURL <- "http://www.jaredlander.com/2012/02/another-kind-of-super-bowl-pool/"
 
 ```{r}
 bowlPool <- readHTMLTable(theURL, which = 1, header = FALSE, stringsAsFactors = FALSE)
+bowlPool
 ```
