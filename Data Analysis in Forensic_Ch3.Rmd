@@ -1,0 +1,108 @@
+---
+title: "CH3 Concepts of Statistical Science and Decision Theory"
+output:
+  html_document:
+    theme: united
+    highlight: haddock
+    
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Example 3.3.2
+
+```{r}
+# Data and prior parameters
+y = 40
+n = 400
+alpha = 18
+beta = 425
+```
+
+```{r}
+# Posterior parameters
+alphap = alpha + y
+betap = beta + n - y
+print(paste('alpha*=',alphap, ', beta*=',betap))
+```
+
+```{r}
+# Prior, likelihood and posterior distributions
+par(mfrow = c(3,1))
+plot(function(x) dbeta(x,alpha,beta), 0, 0.25, ylim = c(0,45), ylab='', xlab = expression(paste(theta)), main = expression(paste('Prior (') * paste(alpha == paste(18) * paste(', ') * paste(beta == paste(425))) * paste(')')))
+plot(function(x) dbeta(x,y+1,n-y+1), 0, 0.25, ylim = c(0,45), ylab='', xlab = expression(paste(theta)), main = expression(paste('Likelihood (') * paste(alpha == paste(41) * paste(', ') * paste(beta == paste(361))) * paste(')')))
+plot(function(x) dbeta(x,alphap,betap), 0, 0.25, ylim = c(0,45), ylab='', xlab = expression(paste(theta)), main = expression(paste('Posterior (') * paste(alpha == paste(58) * paste(', ') * paste(beta == paste(785))) * paste(')')))
+```
+
+---
+
+# Example 3.3.7
+
+```{r}
+# Data, prior parameters and prior distribution
+n = 20
+y = 3
+alpha1 = 3
+beta1 = 10
+alpha2 = 6
+beta2 = 2.5
+g1 = 0.6
+g2 = 1 - g1
+plot(function(x) g1*dbeta(x,alpha1,beta1) + (1-g1)*dbeta(x,alpha2,beta2), 0, 1, xlab = expression(paste(theta)), ylab = 'Probability density')
+```
+
+```{r}
+# Posterior parameters and posterior distribution
+alphap1 = alpha1 + y
+betap1 = beta1 + n - y
+alphap2 = alpha2 + y
+betap2 = beta2 + n - y
+gp1 = round((g1 * beta(alphap1,betap1)) / (g1*beta(alphap1,betap1) + g2 * beta(alphap2,betap2)),2)
+gp2 = 1 - gp1
+plot(function(x) gp1*dbeta(x,alphap1,betap1) + (1-gp1)*dbeta(x,alphap2,betap2), 0, 1, xlab = expression(paste(theta)), ylab = 'Probability density')
+```
+
+---
+
+# Example 3.3.8
+
+```{r}
+# Data, prior parameters
+mu = c(178,172)
+tau2 = c(1,2.8^2)
+n = 1
+xbar = 176
+sigma2 = 4
+```
+
+```{r}
+# Posterior parameters
+mux = c(0,0)
+taux2 = c(0,0)
+for (i in 1:length(mu))
+{
+  mux[i] = (mu[i]*sigma2/n + tau2[i]*xbar)/(sigma2/n + tau2[i])
+  taux2[i] = sqrt((tau2[i]*sigma2/n)/(tau2[i] + sigma2/n))
+}
+```
+
+```{r}
+# For a sequential use of the Bayes theorem, assign
+mu = mux
+tau2 = taux2
+# and rerun the codes above to compute posterior parameters.
+```
+
+```{r}
+# Prior and posterior distributions
+par(mfrow=c(2,1))
+plot(function(x) dnorm(x,mu[1],sqrt(tau2)[1]), 165, 185, main = 'Prior distributions for expert A and B', lty = 1, xlab = expression(paste(theta)), ylab='')
+plot(function(x) dnorm(x,mu[2],sqrt(tau2)[2]), 165, 185, main = '', lty = 2, add = TRUE)
+legend(164.5,0.4,c('Expert A','Expert B'), lty = c(1,2))
+
+plot(function(x) dnorm(x,mux[1],sqrt(taux2)[1]), 165, 185, main = paste('Posterior distributions for expert A and B (n=',n,paste(')')), lty = 1, xlab = expression(paste(theta)), ylab = '')
+plot(function(x) dnorm(x,mux[2],sqrt(taux2)[2]), 165, 185, main = '', lty = 2, add = TRUE)
+legend(164.5,0.4,c("Expert A","Expert B"), lty = c(1,2))
+```
