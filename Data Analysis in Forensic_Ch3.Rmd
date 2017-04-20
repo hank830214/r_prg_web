@@ -106,3 +106,15 @@ plot(function(x) dnorm(x,mux[1],sqrt(taux2)[1]), 165, 185, main = paste('Posteri
 plot(function(x) dnorm(x,mux[2],sqrt(taux2)[2]), 165, 185, main = '', lty = 2, add = TRUE)
 legend(164.5,0.4,c("Expert A","Expert B"), lty = c(1,2))
 ```
+
+# Example 3.3.9
+
+```{r}
+# Data
+n = 15
+y = 0
+
+# Probability of future observations
+x = c(0,1)
+(n^(y+1/2))/(gamma(y+1/2)*factorial(x))*(gamma(x+y+1/2)/(n+1)^(x+y+1/2))
+```
